@@ -1,6 +1,6 @@
 TaeHunKim.github.io
 
-Working for Optimizer team in SAL Labs Korea, as a Developer
+Working for Optimizer team in SAP Labs Korea, as a Developer
 
 Pursuing a master's degree in Cloud and Mobile Systems Lab @ Dept. of Computer Science and Engineering, SNU.
 
