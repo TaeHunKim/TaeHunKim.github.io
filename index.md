@@ -1,6 +1,9 @@
 TaeHunKim.github.io
 
+Working for Optimizer team in SAL Labs Korea, as a Developer
+
 Pursuing a master's degree in Cloud and Mobile Systems Lab @ Dept. of Computer Science and Engineering, SNU.
+
 My hobby is taking a photo.
 
 * Check my career in [LinkedIn](https://kr.linkedin.com/in/taehun-kim-78b48599).
