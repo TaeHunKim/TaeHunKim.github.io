@@ -1,4 +1,4 @@
-Working for SQL Optimizer team in SAP Labs Korea, as a Developer
+Working for Engine - Compiler team in SAP Labs Korea, as a Developer, Since 2017
 
 Granted bachelor and master's degree in Computer Science and Engineering in SNU.
 
