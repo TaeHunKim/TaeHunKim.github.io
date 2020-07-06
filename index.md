@@ -1,8 +1,8 @@
-Working for Engine - Compiler team in SAP Labs Korea, as a Developer, Since 2017
+Working for Engine - Compile team in SAP Labs Korea, as a Developer, Since 2017
 
 Granted bachelor and master's degree in Computer Science and Engineering in SNU.
 
-My hobby is taking a photo.
+My hobby is taking photos.
 
 * Check my career in [LinkedIn](https://kr.linkedin.com/in/taehun-kim-78b48599).
 * Read my code in [Github](https://github.com/TaeHunKim) or [repl.it](https://repl.it/@TaeHunKim).
