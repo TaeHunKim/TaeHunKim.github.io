@@ -1,4 +1,4 @@
-Working for Engine - Compile team in SAP Labs Korea, as a Developer, Since 2017
+Working for Compile Service team in SAP Labs Korea, as a Senior Developer, Since 2017
 
 Granted bachelor and master's degree in Computer Science and Engineering in SNU.
 
