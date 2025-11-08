@@ -1,0 +1,5 @@
+sidebar-category:
+  - title: "카테고리"
+    children:
+      - title: "[AI 자동생성]컴퓨터과학의 역사"
+        url: "/cs_history"
