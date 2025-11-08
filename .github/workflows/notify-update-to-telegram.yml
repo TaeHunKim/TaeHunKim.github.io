@@ -25,7 +25,6 @@ jobs:
           # 비교 기준을 명시합니다. (현재 체크아웃된 커밋 vs 그 부모 커밋)
           base: HEAD^
           filters: |
-            # 감지하고 싶은 디렉토리나 파일 패턴을 지정하세요.
             target_dir:
               - '_posts/**'
 
