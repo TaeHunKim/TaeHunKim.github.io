@@ -1,8 +1,8 @@
 {
-  "day_count": 6,
+  "day_count": 7,
   "last_run_date": "2025-11-08",
-  "current_year": 1936,
-  "last_topic": "앨런 튜링의 튜링 머신",
-  "next_topic": "콘라트 추제의 Z1",
-  "next_year": 1938
+  "current_year": 1938,
+  "last_topic": "콘라트 추제의 Z1",
+  "next_topic": "애터내소프-베리 컴퓨터",
+  "next_year": 1942
 }
