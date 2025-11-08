@@ -18,19 +18,23 @@ jobs:
           # 변경 사항을 감지하기 위해 최소 2개의 커밋 히스토리가 필요합니다 (현재 커밋 vs 이전 커밋 비교).
           fetch-depth: 2
 
-      - name: Check for changes in specific directory
-        uses: dorny/paths-filter@v3
-        id: changes
-        with:
-          # 비교 기준을 명시합니다. (현재 체크아웃된 커밋 vs 그 부모 커밋)
-          base: HEAD^
-          filters: |
-            target_dir:
-              - '_posts/**'
+      - name: Check for changes manually
+        id: check_changes
+        run: |
+          # 이전 커밋과 현재 커밋을 비교하여 특정 디렉토리에 변경이 있는지 확인
+          # --quiet 옵션은 변경사항이 있으면 exit code 1, 없으면 0을 반환합니다.
+          # 따라서 !를 붙여서 변경사항이 있을 때 true가 되도록 합니다.
+          if ! git diff --quiet HEAD^ HEAD -- _posts; then
+            echo "changes_detected=true" >> $GITHUB_OUTPUT
+            echo "변경사항이 감지되었습니다."
+          else
+            echo "changes_detected=false" >> $GITHUB_OUTPUT
+            echo "변경사항이 없습니다."
+          fi
 
       - name: Run Triggered Action
         # 위 단계에서 'target_dir' 필터에 해당하는 변경이 감지되었을 때만 이 단계를 실행합니다.
-        if: steps.changes.outputs.target_dir == 'true'
+        if: steps.check_changes.outputs.changes_detected == 'true'
         uses: appleboy/telegram-action@master
         with:
           to: ${{ secrets.TELEGRAM_CHAT_ID }}
