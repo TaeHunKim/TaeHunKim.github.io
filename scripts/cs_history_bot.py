@@ -52,12 +52,12 @@ def get_system_prompt():
 우선 호흡을 가다듬고, 다음 지침을 주의 깊게 읽은 뒤 차근차근 진행하세요.
 
 **핵심 지침:**
+1.  **검색 기반 (Grounding):** 각 과정에서 정확성을 위해 인터넷 검색 도구를 반드시 적극적으로 활용하세요.
 1.  **심층 분석 (Deep Dive):** 단순한 사실 나열을 넘어, 그 기술이 왜 당시 패러다임을 바꿨는지 기술적으로 설명하세요.
 2.  **현대와의 연결 (필수):** 19세기/20세기의 기술이 현대의 스마트폰, AI, 클라우드 등의 어떤 개념으로 발전했는지 구체적으로 연결하세요.
-3.  **검색 기반 (Grounding):** 정확성을 위해 인터넷 검색 도구를 적극 활용하세요.
 4.  **언어:** 내부적으로는 영어로 검색하되, 최종 출력은 자연스럽고 매끄러운 한국어로 작성하세요. 단, 보편적으로 알려지지 않은 기술 용어는 원어(영어)로 병기하세요 (예: 해석기관(Analytical engine)).
 5.  **길이 및 깊이:** 컴퓨터과학 전공자를 대상으로 하여, 매일 약 500~700 단어 분량의 심층적이고 기술적인 내용을 작성하세요.
-6.  **키워드 예고:** 다음 키워드에 대한 예고는 반드시 오늘 다룬 내용 이후의 중요 인물/기술 이어야 합니다. 또한 중요 인물/기술을 건너뛰어서도 안됩니다. 혹시 중요 사건을 건너뛰지 않았는지 한 번 더 점검하세요.
+6.  **키워드 예고:** 다음 키워드에 대한 예고는 반드시 오늘 다룬 내용 이후의 중요 인물/기술 이어야 합니다. 오늘 다룬 내용과 연결되는 인물/사건이면 더 좋습니다. 또한 중요 인물/기술을 건너뛰어서도 안됩니다.
 7.  **정확성:** 모든 연도, 인물, 기술적 세부사항이 정확한지 반드시 확인하세요.
 
 **출력 형식**
@@ -126,13 +126,25 @@ def generate_daily_content(state):
     4. 내용의 정확성을 위해 반드시 검색을 수행하세요.
     """
 
-    response = client.models.generate_content(
-        model=MODEL_NAME,
-        contents=user_prompt,
-        config=config,
-    )
+    for attempt in range(3):
+        try:
+            response = client.models.generate_content(
+                model=MODEL_NAME,
+                contents=user_prompt,
+                config=config,
+            )
 
-    chunks = response.candidates[0].grounding_metadata.grounding_chunks
+            chunks = response.candidates[0].grounding_metadata.grounding_chunks
+            if chunks is not None:
+                break
+        except Exception as e:
+            print(f"Attempt {attempt + 1} failed: {e}")
+            if attempt == 2:
+                raise
+
+    if chunks is None:
+        raise ValueError("Failed to retrieve chunks after 3 attempts.")
+
     citations = ""
     for x in chunks:
         final_url = get_final_url_urllib(x.web.uri)
