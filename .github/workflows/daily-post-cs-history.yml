@@ -36,6 +36,36 @@ jobs:
           git config user.name "GitHub Actions Bot"
           git config user.email "actions@github.com"
           git add _posts/
+          git add scripts/
           # 변경사항이 있을 때만 커밋
           git commit -m "Add daily post [skip ci]" || exit 0
           git push
+
+      # 빌드 성공 메세지 발송
+      - name: Send Build Success Message
+        uses: appleboy/telegram-action@master
+        if: success()
+        with:
+          to: ${{ secrets.TELEGRAM_CHAT_ID }}
+          token: ${{ secrets.TELEGRAM_TOKEN }}
+          format: markdown
+          message: |
+            New Blog Post Published!
+            See [here](https://taehunkim.github.io/cs_history)
+
+      # 빌드 실패 메세지 발송
+      - name: Send Build Success Message
+        uses: appleboy/telegram-action@master
+        if: failure()
+        with:
+          to: ${{ secrets.TELEGRAM_CHAT_ID }}
+          token: ${{ secrets.TELEGRAM_TOKEN }}
+          format: markdown
+          message: |
+            Author: ${{github.actor}}
+            
+            Status: 😱 **Failure**
+            
+            Commit message: ${{ github.event.commits[0].message }}
+            
+            [link](https://github.com/${{ github.repository }}/actions)
