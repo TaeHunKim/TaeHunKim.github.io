@@ -1,0 +1,42 @@
+name: Post-build Action for Specific Directory
+
+on:
+  page_build: # 페이지 빌드가 완료되면 트리거됩니다.
+
+jobs:
+  run-if-specific-dir-updated:
+    runs-on: ubuntu-latest
+    # 중요: 페이지 빌드가 '성공'했을 때만 실행합니다.
+    if: github.event.build.status == 'built'
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          # page_build 이벤트를 유발한 정확한 커밋을 체크아웃합니다.
+          ref: ${{ github.event.build.commit }}
+          # 변경 사항을 감지하기 위해 최소 2개의 커밋 히스토리가 필요합니다 (현재 커밋 vs 이전 커밋 비교).
+          fetch-depth: 2
+
+      - name: Check for changes in specific directory
+        uses: dorny/paths-filter@v3
+        id: changes
+        with:
+          # 비교 기준을 명시합니다. (현재 체크아웃된 커밋 vs 그 부모 커밋)
+          base: HEAD^
+          filters: |
+            # 감지하고 싶은 디렉토리나 파일 패턴을 지정하세요.
+            target_dir:
+              - '_posts/**'
+
+      - name: Run Triggered Action
+        # 위 단계에서 'target_dir' 필터에 해당하는 변경이 감지되었을 때만 이 단계를 실행합니다.
+        if: steps.changes.outputs.target_dir == 'true'
+        uses: appleboy/telegram-action@master
+        with:
+          to: ${{ secrets.TELEGRAM_CHAT_ID }}
+          token: ${{ secrets.TELEGRAM_TOKEN }}
+          format: markdown
+          message: |
+            New Blog Post Published!
+            See [here](https://taehunkim.github.io/cs_history)
