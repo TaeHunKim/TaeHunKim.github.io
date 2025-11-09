@@ -1,8 +1,8 @@
 {
-  "day_count": 8,
+  "day_count": 9,
   "last_run_date": "2025-11-09",
-  "current_year": 1942,
-  "last_topic": "애터내소프-베리 컴퓨터",
-  "next_topic": "콜로서스",
-  "next_year": 1943
+  "current_year": 1943,
+  "last_topic": "Colossus",
+  "next_topic": "Harvard Mark I",
+  "next_year": 1944
 }
