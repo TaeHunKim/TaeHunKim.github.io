@@ -1,8 +1,8 @@
 {
-  "day_count": 10,
+  "day_count": 11,
   "last_run_date": "2025-11-10",
-  "current_year": 1944,
-  "last_topic": "Harvard Mark I",
-  "next_topic": "ENIAC",
+  "current_year": 1945,
+  "last_topic": "ENIAC",
+  "next_topic": "First Draft of a Report on the EDVAC",
   "next_year": 1945
 }
