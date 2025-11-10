@@ -1,8 +1,8 @@
 {
-  "day_count": 9,
-  "last_run_date": "2025-11-09",
-  "current_year": 1943,
-  "last_topic": "Colossus",
-  "next_topic": "Harvard Mark I",
-  "next_year": 1944
+  "day_count": 10,
+  "last_run_date": "2025-11-10",
+  "current_year": 1944,
+  "last_topic": "Harvard Mark I",
+  "next_topic": "ENIAC",
+  "next_year": 1945
 }
