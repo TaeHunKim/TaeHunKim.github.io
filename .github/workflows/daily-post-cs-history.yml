@@ -34,16 +34,6 @@ jobs:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
         run: python scripts/cs_history_bot.py
 
-      - name: Commit and push if changed
-        run: |
-          git config user.name "GitHub Actions Bot"
-          git config user.email "actions@github.com"
-          git add _posts/
-          git add scripts/
-          # 변경사항이 있을 때만 커밋
-          git commit -m "Add daily post [skip ci]" || exit 0
-          git push
-
       # 빌드 실패 메세지 발송
       - name: Send Build Success Message
         uses: appleboy/telegram-action@master
@@ -60,3 +50,15 @@ jobs:
             Commit message: ${{ github.event.commits[0].message }}
             
             [link](https://github.com/${{ github.repository }}/actions)
+
+      - name: Commit and push if changed
+        run: |
+          git config user.name "GitHub Actions Bot"
+          git config user.email "actions@github.com"
+          git add _posts/
+          git add scripts/
+          # 변경사항이 있을 때만 커밋
+          git commit -m "Add daily post [skip ci]" || exit 0
+          git push
+
+
