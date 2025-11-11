@@ -1,8 +1,8 @@
 {
-  "day_count": 11,
-  "last_run_date": "2025-11-10",
+  "day_count": 12,
+  "last_run_date": "2025-11-11",
   "current_year": 1945,
-  "last_topic": "ENIAC",
-  "next_topic": "First Draft of a Report on the EDVAC",
-  "next_year": 1945
+  "last_topic": "First Draft of a Report on the EDVAC",
+  "next_topic": "The Transistor",
+  "next_year": 1947
 }
