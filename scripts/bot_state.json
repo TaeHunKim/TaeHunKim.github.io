@@ -1,8 +1,8 @@
 {
-  "day_count": 15,
+  "day_count": 16,
   "last_run_date": "2025-11-13",
-  "current_year": 1948,
-  "last_topic": "A Mathematical Theory of Communication",
-  "next_topic": "EDSAC",
-  "next_year": 1949
+  "current_year": 1949,
+  "last_topic": "EDSAC",
+  "next_topic": "A-0 Compiler",
+  "next_year": 1952
 }
