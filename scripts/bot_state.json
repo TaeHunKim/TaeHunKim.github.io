@@ -1,8 +1,8 @@
 {
-  "day_count": 14,
-  "last_run_date": "2025-11-12",
+  "day_count": 15,
+  "last_run_date": "2025-11-13",
   "current_year": 1948,
-  "last_topic": "Manchester Baby (SSEM)",
-  "next_topic": "A Mathematical Theory of Communication",
-  "next_year": 1948
+  "last_topic": "A Mathematical Theory of Communication",
+  "next_topic": "EDSAC",
+  "next_year": 1949
 }
