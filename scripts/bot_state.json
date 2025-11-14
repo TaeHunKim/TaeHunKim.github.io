@@ -1,8 +1,8 @@
 {
-  "day_count": 17,
+  "day_count": 18,
   "last_run_date": "2025-11-14",
-  "current_year": 1952,
-  "last_topic": "A-0 Compiler",
-  "next_topic": "FORTRAN",
-  "next_year": 1954
+  "current_year": 1954,
+  "last_topic": "FORTRAN",
+  "next_topic": "LISP",
+  "next_year": 1958
 }
