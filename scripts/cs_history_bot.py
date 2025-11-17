@@ -7,7 +7,7 @@ from json_repair import repair_json
 import urllib.request
 import traceback
 
-from models import HistoryBotResponse, HistoryBotMetadata
+from cs_history_models import HistoryBotResponse, HistoryBotMetadata
 
 MODEL_NAME = "gemini-2.5-pro"
 STATE_FILE = "bot_state.json"
