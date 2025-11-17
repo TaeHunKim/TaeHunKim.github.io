@@ -1,0 +1,64 @@
+name: Daily Auto Post
+
+on:
+  schedule:
+    # 매일 한국 시간 7시 30분, 19시 30분 (KST, UTC+9) 실행
+    - cron: '27 10 * * *'
+    - cron: '27 22 * * *'
+  workflow_dispatch: # 수동 실행 옵션
+
+permissions:
+  contents: write # 저장소에 푸시하기 위한 권한 필요
+
+jobs:
+  build-and-post:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.BOT_ACCESS_TOKEN }}
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12.3'
+
+      # 필요한 라이브러리가 있다면 설치 (예: requests, openai 등)
+      - name: Install dependencies
+        run: pip install -r scripts/ghost_in_the_legacy/requirements.txt
+
+      - name: Generate daily post
+        env:
+          # GitHub에 저장된 SECRET_KEY를 스크립트의 환경 변수로 주입
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY_NOVEL }}
+        run: python scripts/ghost_in_the_legacy/main.py
+
+      # 빌드 실패 메세지 발송
+      - name: Send Build Success Message
+        uses: appleboy/telegram-action@master
+        if: failure()
+        with:
+          to: ${{ secrets.TELEGRAM_CHAT_ID }}
+          token: ${{ secrets.TELEGRAM_TOKEN }}
+          format: markdown
+          message: |
+            Author: ${{github.actor}}
+            
+            Status: 😱 **Failure**
+            
+            Commit message: ${{ github.event.commits[0].message }}
+            
+            [link](https://github.com/${{ github.repository }}/actions)
+
+      - name: Commit and push if changed
+        run: |
+          git config user.name "GitHub Actions Bot"
+          git config user.email "actions@github.com"
+          git add _posts/
+          git add scripts/ghost_in_the_legacy/
+          # 변경사항이 있을 때만 커밋
+          git commit -m "Add daily post [skip ci]" || exit 0
+          git push
+
+

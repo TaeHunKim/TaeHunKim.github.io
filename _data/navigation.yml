@@ -3,3 +3,5 @@ sidebar-category:
     children:
       - title: "[AI 자동생성]컴퓨터과학의 역사"
         url: "/cs_history"
+      - title: "[AI 자동생성소설]Ghost in the Legacy"
+        url: "/ghost_in_the_legacy"

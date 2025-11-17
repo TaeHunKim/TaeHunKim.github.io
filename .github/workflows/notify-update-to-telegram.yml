@@ -42,4 +42,4 @@ jobs:
           format: markdown
           message: |
             New Blog Post Published!
-            See [here](https://taehunkim.github.io/cs_history)
+            See [here](https://taehunkim.github.io/)
