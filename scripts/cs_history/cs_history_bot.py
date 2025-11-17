@@ -239,7 +239,7 @@ comments: true
 ---
 """
         script_dir = os.path.dirname(os.path.abspath(__file__))
-        target_dir = os.path.normpath(os.path.join(script_dir, "..", "_posts", "cs_history"))
+        target_dir = os.path.normpath(os.path.join(script_dir, "..", "..", "_posts", "cs_history"))
         os.makedirs(target_dir, exist_ok=True)
         with open(os.path.join(target_dir, filename), 'w', encoding='utf-8') as f:
             f.write(header.strip() + "\n\n" + body)

@@ -7,7 +7,7 @@ import json
 from datetime import datetime
 import traceback
 
-MODEL_NAME = "gemini-2.5-pro"
+MODEL_NAME = "gemini-2.5-flash"
 STATE_FILE = "bot_state.json"
 
 DEFAULT_STATE = {
@@ -319,12 +319,12 @@ comments: true
     if unused_web_citation:
         body += "\n\n ## 맵 검색 (미사용됨)\n" + unused_web_citation
 
-    body += "\n\n*이 콘텐츠는 AI에 의해 생성되었으며, 오류나 부정확한 정보를 포함할 수 있습니다.*"
+    body += "\n\n---\n\n*이 콘텐츠는 AI에 의해 생성되었으며, 오류나 부정확한 정보를 포함할 수 있습니다.*"
 
     filename = f"{datetime.now().strftime('%Y-%m-%d')}-day{state['day_count']}.md"
 
     script_dir = os.path.dirname(os.path.abspath(__file__))
-    target_dir = os.path.normpath(os.path.join(script_dir, "..", "_posts", "ghost_in_the_legacy"))
+    target_dir = os.path.normpath(os.path.join(script_dir, "..", "..", "_posts", "ghost_in_the_legacy"))
     os.makedirs(target_dir, exist_ok=True)
     with open(os.path.join(target_dir, filename), 'w', encoding='utf-8') as f:
         f.write(header.strip() + "\n\n" + body)
