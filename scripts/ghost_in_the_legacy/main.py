@@ -295,29 +295,32 @@ comments: true
 ## 본문
 {text}
 """
-    used_web_citation = ""
-    for url, title in unique_used_web_chunks.items():
-        used_web_citation += f"* [{title}]({url})\n"
-    if used_web_citation:
-        body += "\n\n ## 웹 검색 (사용됨)\n" + used_web_citation
 
-    unused_web_citation = ""
-    for url, title in unique_unused_web_chunks.items():
-        unused_web_citation += f"* [{title}]({url})\n"
-    if unused_web_citation:
-        body += "\n\n ## 웹 검색 (미사용됨)\n" + unused_web_citation
+    if unique_used_web_chunks or unique_unused_web_chunks or unique_used_map_chunks or unique_unused_map_chunks:
+        body += "\n\n---\n\n"
+        used_web_citation = ""
+        for url, title in unique_used_web_chunks.items():
+            used_web_citation += f"* [{title}]({url})\n"
+        if used_web_citation:
+            body += "\n\n ## 웹 검색 (사용됨)\n" + used_web_citation
 
-    used_map_citation = ""
-    for url, title in unique_used_map_chunks.items():
-        used_map_citation += f"* [{title}]({url})\n"
-    if used_map_citation:
-        body += "\n\n ## 맵 검색 (사용됨)\n" + used_map_citation
+        unused_web_citation = ""
+        for url, title in unique_unused_web_chunks.items():
+            unused_web_citation += f"* [{title}]({url})\n"
+        if unused_web_citation:
+            body += "\n\n ## 웹 검색 (미사용됨)\n" + unused_web_citation
 
-    unused_web_citation = ""
-    for url, title in unique_unused_map_chunks.items():
-        unused_web_citation += f"* [{title}]({url})\n"
-    if unused_web_citation:
-        body += "\n\n ## 맵 검색 (미사용됨)\n" + unused_web_citation
+        used_map_citation = ""
+        for url, title in unique_used_map_chunks.items():
+            used_map_citation += f"* [{title}]({url})\n"
+        if used_map_citation:
+            body += "\n\n ## 맵 검색 (사용됨)\n" + used_map_citation
+
+        unused_web_citation = ""
+        for url, title in unique_unused_map_chunks.items():
+            unused_web_citation += f"* [{title}]({url})\n"
+        if unused_web_citation:
+            body += "\n\n ## 맵 검색 (미사용됨)\n" + unused_web_citation
 
     body += "\n\n---\n\n*이 콘텐츠는 AI에 의해 생성되었으며, 오류나 부정확한 정보를 포함할 수 있습니다.*"
 
