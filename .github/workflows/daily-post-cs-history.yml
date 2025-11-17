@@ -26,13 +26,13 @@ jobs:
 
       # 필요한 라이브러리가 있다면 설치 (예: requests, openai 등)
       - name: Install dependencies
-        run: pip install -r scripts/requirements.txt
+        run: pip install -r scripts/cs_history/requirements.txt
 
       - name: Generate daily post
         env:
           # GitHub에 저장된 SECRET_KEY를 스크립트의 환경 변수로 주입
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
-        run: python scripts/cs_history_bot.py
+        run: python scripts/cs_history/cs_history_bot.py
 
       # 빌드 실패 메세지 발송
       - name: Send Build Success Message
@@ -56,7 +56,7 @@ jobs:
           git config user.name "GitHub Actions Bot"
           git config user.email "actions@github.com"
           git add _posts/
-          git add scripts/
+          git add scripts/cs_history/
           # 변경사항이 있을 때만 커밋
           git commit -m "Add daily post [skip ci]" || exit 0
           git push
