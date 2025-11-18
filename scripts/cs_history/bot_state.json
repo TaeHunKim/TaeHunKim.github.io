@@ -1,8 +1,8 @@
 {
-  "day_count": 24,
-  "last_run_date": "2025-11-17",
-  "current_year": 1969,
-  "last_topic": "Unix",
-  "next_topic": "Intel 4004",
-  "next_year": 1971
+  "day_count": 25,
+  "last_run_date": "2025-11-18",
+  "current_year": 1971,
+  "last_topic": "Intel 4004",
+  "next_topic": "C Programming Language",
+  "next_year": 1972
 }
