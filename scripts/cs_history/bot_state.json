@@ -1,8 +1,8 @@
 {
-  "day_count": 25,
+  "day_count": 26,
   "last_run_date": "2025-11-18",
-  "current_year": 1971,
-  "last_topic": "Intel 4004",
-  "next_topic": "C Programming Language",
-  "next_year": 1972
+  "current_year": 1972,
+  "last_topic": "C Programming Language",
+  "next_topic": "Xerox Alto",
+  "next_year": 1973
 }
