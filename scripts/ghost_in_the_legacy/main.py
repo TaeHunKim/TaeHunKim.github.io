@@ -6,6 +6,7 @@ import asyncio
 import json
 from datetime import datetime
 import traceback
+import sys
 
 MODEL_NAME = "gemini-2.5-flash"
 STATE_FILE = "bot_state.json"
@@ -339,3 +340,5 @@ if __name__ == "__main__":
         main()
     except Exception as e:
         traceback.print_exc()
+        sys.exit(1)
+    

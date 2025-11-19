@@ -6,6 +6,7 @@ from datetime import datetime, timedelta
 from json_repair import repair_json
 import urllib.request
 import traceback
+import sys
 
 from cs_history_models import HistoryBotResponse, HistoryBotMetadata
 
@@ -251,5 +252,10 @@ comments: true
     except Exception as e:
         print(f"❌ 오류 발생: {e}")
         traceback.print_exc()
+        raise
 if __name__ == "__main__":
-    main()
+    try:
+        main()
+    except Exception as e:
+        sys.exit(1)
+
