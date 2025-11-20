@@ -7,6 +7,7 @@ import json
 from datetime import datetime
 import traceback
 import sys
+import time
 
 MODEL_NAME = "gemini-2.5-flash"
 STATE_FILE = "bot_state.json"
@@ -189,11 +190,19 @@ def get_llm_call_result(system_message, human_message, temperature, top_p, use_t
     if return_json:
         config.response_mime_type = 'application/json'
 
-    response = client.models.generate_content(
-        model=MODEL_NAME,
-        contents=human_message,
-        config=config,
-    )
+    for attempt in range(3):
+        try:
+            response = client.models.generate_content(
+                model=MODEL_NAME,
+                contents=human_message,
+                config=config,
+            )
+            break
+        except Exception as e:
+            print(f"Attempt {attempt + 1} failed: {e}")
+            time.sleep(60*(2**attempt))
+            if attempt == 2:
+                raise
 
     unique_used_web_chunks, unique_unused_web_chunks, unique_used_map_chunks, unique_unused_map_chunks = get_grounding_citations(response)
 

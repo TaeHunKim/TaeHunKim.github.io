@@ -7,6 +7,7 @@ from json_repair import repair_json
 import urllib.request
 import traceback
 import sys
+import time
 
 from cs_history_models import HistoryBotResponse, HistoryBotMetadata
 
@@ -141,6 +142,7 @@ def generate_daily_content(state):
                 break
         except Exception as e:
             print(f"Attempt {attempt + 1} failed: {e}")
+            time.sleep(60*(2**attempt))
             if attempt == 2:
                 raise
 
