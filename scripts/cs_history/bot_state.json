@@ -1,8 +1,8 @@
 {
-  "day_count": 31,
+  "day_count": 32,
   "last_run_date": "2025-11-21",
   "current_year": 1976,
-  "last_topic": "Apple I",
-  "next_topic": "Ethernet",
-  "next_year": 1976
+  "last_topic": "Ethernet",
+  "next_topic": "RSA 암호",
+  "next_year": 1977
 }
