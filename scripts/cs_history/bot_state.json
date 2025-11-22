@@ -1,8 +1,8 @@
 {
-  "day_count": 33,
+  "day_count": 34,
   "last_run_date": "2025-11-22",
-  "current_year": 1977,
-  "last_topic": "RSA 암호",
-  "next_topic": "VisiCalc",
-  "next_year": 1979
+  "current_year": 1979,
+  "last_topic": "VisiCalc",
+  "next_topic": "Xerox Star",
+  "next_year": 1981
 }
