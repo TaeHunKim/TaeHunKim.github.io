@@ -1,8 +1,8 @@
 {
-  "day_count": 35,
+  "day_count": 36,
   "last_run_date": "2025-11-23",
-  "current_year": 1981,
-  "last_topic": "Xerox Star",
-  "next_topic": "Apple Lisa",
+  "current_year": 1983,
+  "last_topic": "Apple Lisa",
+  "next_topic": "GNU Project",
   "next_year": 1983
 }
