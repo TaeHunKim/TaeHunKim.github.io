@@ -1,8 +1,8 @@
 {
-  "day_count": 45,
+  "day_count": 46,
   "last_run_date": "2025-11-28",
-  "current_year": 1993,
-  "last_topic": "NCSA Mosaic",
-  "next_topic": "Netscape Navigator",
-  "next_year": 1994
+  "current_year": 1994,
+  "last_topic": "Netscape Navigator",
+  "next_topic": "Java",
+  "next_year": 1995
 }
