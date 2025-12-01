@@ -1,8 +1,8 @@
 {
-  "day_count": 50,
-  "last_run_date": "2025-11-30",
-  "current_year": 1997,
-  "last_topic": "IEEE 802.11",
-  "next_topic": "Google의 창립",
-  "next_year": 1998
+  "day_count": 51,
+  "last_run_date": "2025-12-01",
+  "current_year": 1998,
+  "last_topic": "Google의 창립과 PageRank",
+  "next_topic": "IEEE 802.11b",
+  "next_year": 1999
 }
