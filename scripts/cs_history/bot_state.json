@@ -1,8 +1,8 @@
 {
-  "day_count": 51,
+  "day_count": 52,
   "last_run_date": "2025-12-01",
-  "current_year": 1998,
-  "last_topic": "Google의 창립과 PageRank",
-  "next_topic": "IEEE 802.11b",
-  "next_year": 1999
+  "current_year": 1999,
+  "last_topic": "IEEE 802.11b",
+  "next_topic": "닷컴 버블 붕괴 (Dot-com bubble burst)",
+  "next_year": 2000
 }
