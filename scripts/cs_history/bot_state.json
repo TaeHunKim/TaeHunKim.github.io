@@ -1,8 +1,8 @@
 {
-  "day_count": 52,
-  "last_run_date": "2025-12-01",
-  "current_year": 1999,
-  "last_topic": "IEEE 802.11b",
-  "next_topic": "닷컴 버블 붕괴 (Dot-com bubble burst)",
-  "next_year": 2000
+  "day_count": 53,
+  "last_run_date": "2025-12-02",
+  "current_year": 2000,
+  "last_topic": "닷컴 버블 붕괴 (Dot-com bubble burst)",
+  "next_topic": "애자일 선언문 (Agile Manifesto)",
+  "next_year": 2001
 }
