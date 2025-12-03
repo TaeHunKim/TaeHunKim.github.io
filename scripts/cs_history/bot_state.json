@@ -1,8 +1,8 @@
 {
-  "day_count": 55,
+  "day_count": 56,
   "last_run_date": "2025-12-03",
-  "current_year": 2002,
-  "last_topic": "아이로봇 룸바 (iRobot Roomba)",
-  "next_topic": "페이스북 (Facebook)",
-  "next_year": 2004
+  "current_year": 2004,
+  "last_topic": "페이스북 (Facebook)",
+  "next_topic": "Git",
+  "next_year": 2005
 }
