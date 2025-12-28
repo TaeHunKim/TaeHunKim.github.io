@@ -9,9 +9,19 @@ import traceback
 import sys
 import time
 
-from cs_history_models import HistoryBotResponse, HistoryBotMetadata
+# Pydantic 모델이 정의된 파일이 같은 폴더에 있다고 가정합니다.
+# 만약 파일이 없다면 이 부분은 수정이 필요할 수 있습니다.
+try:
+    from cs_history_models import HistoryBotResponse, HistoryBotMetadata
+except ImportError:
+    # 혹시 모를 실행 에러를 방지하기 위해 임시로 내부 정의하거나 경고를 띄웁니다.
+    print("⚠️ 'cs_history_models.py' 파일을 찾을 수 없습니다. Pydantic 모델 정의가 필요합니다.")
+    sys.exit(1)
 
-MODEL_NAME = "gemini-2.5-pro"
+# --- [Configuration] ---
+# 비용 효율성을 위해 역할에 따라 모델을 이원화합니다.
+RESEARCH_MODEL_NAME = "gemini-2.5-flash"  # 검색 및 조사 담당 (속도 빠름, 저렴함)
+WRITER_MODEL_NAME = "gemini-3-flash-preview"      # 작문 담당 (문장력 우수, 추론 능력 높음)
 STATE_FILE = "bot_state.json"
 
 DEFAULT_STATE = {
@@ -22,6 +32,81 @@ DEFAULT_STATE = {
     "next_topic": "찰스 배비지의 해석기관",
     "next_year": 1835
 }
+
+# --- [Prompt Definitions (English)] ---
+# 프롬프트는 모델의 성능 최적화를 위해 영어로 작성합니다.
+
+def get_researcher_prompt():
+    """Phase 1: Flash 모델을 위한 검색 및 조사 지시문"""
+    return """
+You are an 'AI Computer Science History Researcher'. Your goal is to gather accurate, deep, and technical information about a specific historical event or figure in computer science history.
+
+**Instructions:**
+1.  **Search Aggressively:** Use the Google Search tool to find detailed information.
+2.  **Deep Dive:** Do not just list dates. Find out *how* the technology worked technically and *why* it was a paradigm shift at the time.
+3.  **Modern Connections:** Identify specific modern technologies (e.g., smartphone architecture, cloud computing concepts, specific AI algorithms) that trace their roots back to this event.
+4.  **Next Milestone:** Identify the *single most important* next milestone (person, hardware, or theory) in computer science history that happened *after* the current event.
+5.  **Output:** Provide a structured summary of your findings in English. This summary will be used by a professional writer to create a blog post.
+
+**Required Information to Gather:**
+* Official Name & Original Language Name
+* Exact Year & Context
+* Technical Explanation (How it works)
+* The "Revolutionary" Aspect (Why it mattered)
+* Connection to Modern Tech
+* The Next Historical Milestone (Topic & Year)
+"""
+
+def get_writer_prompt():
+    """Phase 2: Pro 모델을 위한 집필 지시문"""
+    # [수정] 참고 문헌과 면책 조항은 파이썬 코드에서 붙이므로 템플릿에서 제거했습니다.
+    return """
+You are a 'Senior Tech Historian & Blog Writer'. You will receive research notes from a researcher. Your task is to write a daily blog post in **fluent, engaging Korean**.
+
+**Style & Tone:**
+* **Target Audience:** Computer Science students and tech enthusiasts.
+* **Tone:** Professional, insightful, yet accessible. 
+* **Language:** Korean (Main text), but keep technical terms in English brackets where appropriate (e.g., 해석기관(Analytical Engine)).
+* **Length:** About 500~700 words. Deep and technical.
+
+**Output Format:**
+You MUST output a valid JSON object with the following structure. The 'content' field must be a Markdown string using the specific template below.
+
+```json
+{
+    "content": "MARKDOWN_STRING",
+    "metadata": {
+        "current_year": int,
+        "last_topic": "string",
+        "next_topic": "string",
+        "next_year": int
+    }
+}
+```
+
+**Markdown Template for 'content':**
+
+Day {day_count}: {Title}
+
+{Engaging Opening Greeting}
+
+## 🕰️ 오늘의 키워드: {Topic Name}
+ * 원어: {Original Name}
+ * 시기: {Year} ({Key Event})
+
+{Main Body: Explanation of the figure/tech}
+
+## ⚡ 무엇이 혁명적이었나? (Deep Dive)
+{Technical deep dive explaining why this was a breakthrough, based on the research notes}
+
+## 🔗 현대와의 연결: {Modern Analogy}
+{Explain how this past concept connects to specific modern technologies (CPU, AI, etc.)}
+
+## 📅 내일의 키워드 예고
+{A hint about the next milestone mention in the metadata}
+"""
+
+# --- [Helper Functions] ---
 
 def load_state():
     script_dir = os.path.dirname(os.path.abspath(__file__))
@@ -38,127 +123,136 @@ def save_state(state):
         json.dump(state, f, ensure_ascii=False, indent=2)
 
 def get_final_url_urllib(initial_url):
+    """리다이렉트된 최종 URL을 가져옵니다."""
     try:
-        req = urllib.request.Request(initial_url, headers={'User-Agent': 'Mozilla/5.0'}) # Add User-Agent header
+        req = urllib.request.Request(initial_url, headers={'User-Agent': 'Mozilla/5.0'})
         with urllib.request.urlopen(req) as response:
             return response.geturl()
-    except Exception as e:
-        print(f"Error accessing URL: {e}. Returning initial URL.")
+    except Exception:
+        # 에러 발생 시 초기 URL 반환
         return initial_url
 
-def get_system_prompt():
-    """AI에게 페르소나와 출력 형식을 부여합니다."""
-    return """
-당신은 'AI 컴퓨터 과학 역사 봇'입니다. 인류의 컴퓨터 과학 및 프로그래밍 역사에서 매일 가장 중요한 사건이나 인물을 하나씩 소개하는 임무를 맡았습니다.
-
-우선 호흡을 가다듬고, 다음 지침을 주의 깊게 읽은 뒤 차근차근 진행하세요.
-
-**핵심 지침:**
-1.  **검색 기반 (Grounding):** 각 과정에서 정확성을 위해 인터넷 검색 도구를 반드시 적극적으로 활용하세요.
-1.  **심층 분석 (Deep Dive):** 단순한 사실 나열을 넘어, 그 기술이 왜 당시 패러다임을 바꿨는지 기술적으로 설명하세요.
-2.  **현대와의 연결 (필수):** 19세기/20세기의 기술이 현대의 스마트폰, AI, 클라우드 등의 어떤 개념으로 발전했는지 구체적으로 연결하세요.
-4.  **언어:** 내부적으로는 영어로 검색하되, 최종 출력은 자연스럽고 매끄러운 한국어로 작성하세요. 단, 보편적으로 알려지지 않은 기술 용어는 원어(영어)로 병기하세요 (예: 해석기관(Analytical engine)).
-5.  **길이 및 깊이:** 컴퓨터과학 전공자를 대상으로 하여, 매일 약 500~700 단어 분량의 심층적이고 기술적인 내용을 작성하세요.
-6.  **키워드 예고:** 다음 키워드에 대한 예고는 반드시 오늘 다룬 내용 이후의 중요 인물/기술 이어야 합니다. 오늘 다룬 내용과 연결되는 인물/사건이면 더 좋습니다. 또한 중요 인물/기술을 건너뛰어서도 안됩니다.
-7.  **정확성:** 모든 연도, 인물, 기술적 세부사항이 정확한지 반드시 확인하세요.
-
-**출력 형식**
-반드시 아래 주어진 json 형식을 따르고, 그 중 content 필드는 아래 마크다운 템플릿을 사용하세요. 이때 markdown 문법이 틀리지 않게 주의해주세요.
-{
-    "content": string,  // 마크다운 형식의 콘텐츠, 아래 템플릿 준수
-    "metadata": {
-        "current_year": int,  // 콘텐츠에서 다룬 연도, 아래 템플릿의 '연도'와 일치해야 함
-        "last_topic": string,   // 콘텐츠에서 다룬 핵심 인물/기술명, 아래 템플릿의 '핵심 인물/기술명'과 일치해야 함
-        "next_topic": string,  // 다음에 다룰 핵심 인물/기술명. 아래 템플릿의 '내일의 키워드 예고' 에 언급돤 내용과 일치해야 함
-        "next_year": int      // 다음에 다룰 연도. 아래 템플릿의 '내일의 키워드 예고' 에 언급된 사건의 연도와 일치해야 함
-    }
-}
-
-**content 형식 템플릿:**
-
-Day {day_count}: {제목}
-
-{매력적인 도입부 인사말}
-
-## 🕰️ 오늘의 키워드: {핵심 인물/기술명}
- * 원어: {Original Name}
- * 시기: {연도}년 ({관련 주요 사건})
-
-{본문 내용: 이 인물/기술이 무엇인지 설명}
-
-## ⚡ 무엇이 혁명적이었나? (Deep Dive)
-{당시 기술적 한계와 이를 극복한 혁신적 아이디어 설명}
-
-## 🔗 현대와의 연결: {현대 기술 비유}
-{과거의 개념이 현대의 구체적인 기술(예: CPU 아키텍처, 객체지향 등)과 어떻게 연결되는지 설명}
-
-## 📅 내일의 키워드 예고
-{다음 순서에 올 역사적 사건에 대한 간략한 틴트}
-
-"""
+# --- [Core Logic: Hybrid Pipeline] ---
 
 def generate_daily_content(state):
-    """Gemini를 사용하여 오늘의 역사 콘텐츠를 생성합니다."""
-    
-    # 모델 로드 (검색 도구 활성화)
+    """
+    하이브리드 파이프라인:
+    1. Researcher (Flash): 구글 검색을 통해 정보 수집 및 사실 확인
+    2. Writer (Pro): 수집된 정보를 바탕으로 한국어 블로그 포스트 작성
+    """
     client = genai.Client()
-    grounding_tool = types.Tool(
-        google_search=types.GoogleSearch()
-    )
-    config = types.GenerateContentConfig(
-        system_instruction=get_system_prompt(),
-        tools=[grounding_tool],
-        temperature=0.2,
-        #response_mime_type='application/json',
-        #response_json_schema=HistoryBotResponse.model_json_schema(),
-        thinking_config=types.ThinkingConfig(thinking_budget=-1) # Dynamic thinking budget
-    )
-
+    
+    # Context 변수 준비
     last_year = state['current_year']
     last_topic = state['last_topic']
     next_topic = state['next_topic']
     next_year = state['next_year']
+    day_count = state['day_count']
+
+    print(f"   ...Phase 1: Researching '{next_topic}' with {RESEARCH_MODEL_NAME}")
+
+    # --- Phase 1: Research with Flash (Grounding Enabled) ---
+    research_prompt = f"""
+    Current Progress: Day {day_count-1}.
+    Last Topic: '{last_topic}' ({last_year}).
     
-    user_prompt = f"""
-    현재 진행 상황: Day {state['day_count']-1}까지 진행되었으며, 마지막으로 다룬 주제는 {last_year}년의 '{last_topic}'입니다. 이전에 예고된 오늘의 주제는 '{next_topic}'이며, 해당 사건은 {next_year}년에 발생했습니다.
-
-    임무:
-    1. 예고된 주제에 맞춰 위에서 정의한 '출력 형식 템플릿'의 형식으로 Day {state['day_count']}의 게시물을 작성하세요.
-    2. 템플릿 하단의 내일의 키워드 예고에 대해서는 {next_year}년 이후 컴퓨터 과학 역사에서 가장 중요한 다음 이정표(인물, 하드웨어, 또는 소프트웨어 이론)를 찾으세요.
-    3. 템플릿의 {{}} 부분은 실제 내용으로 채우세요.
-    4. 내용의 정확성을 위해 반드시 검색을 수행하세요.
+    **TODAY'S MISSION:**
+    Research the topic: '{next_topic}' which occurred around {next_year}.
+    
+    Find the facts, technical details, modern connections, and the NEXT historical milestone after this one.
     """
+    
+    grounding_tool = types.Tool(google_search=types.GoogleSearch())
+    
+    # Flash 모델 호출 (비용 절감을 위해 Thinking Config 미사용)
+    research_config = types.GenerateContentConfig(
+        system_instruction=get_researcher_prompt(),
+        tools=[grounding_tool],
+        temperature=0.0  # 사실 수집이므로 온도를 낮춤
+    )
 
+    research_response = None
+    chunks = None
+    
+    # 검색 실패 시 재시도 로직
     for attempt in range(3):
         try:
-            response = client.models.generate_content(
-                model=MODEL_NAME,
-                contents=user_prompt,
-                config=config,
+            research_response = client.models.generate_content(
+                model=RESEARCH_MODEL_NAME,
+                contents=research_prompt,
+                config=research_config,
             )
-
-            chunks = response.candidates[0].grounding_metadata.grounding_chunks
-            if chunks is not None:
+            # 검색 결과(Chunks)가 있는지 확인
+            if research_response.candidates[0].grounding_metadata.grounding_chunks:
+                chunks = research_response.candidates[0].grounding_metadata.grounding_chunks
                 break
+            else:
+                print(f"      (Attempt {attempt+1}: No grounding chunks found. Retrying...)")
+                time.sleep(2) # 짧은 대기
         except Exception as e:
-            print(f"Attempt {attempt + 1} failed: {e}")
-            time.sleep(60*(2**attempt))
-            if attempt == 2:
-                raise
+            print(f"      (Attempt {attempt+1} Failed: {e})")
+            time.sleep(2 * (attempt + 1))
+            if attempt == 2: raise
 
-    if chunks is None:
-        raise ValueError("Failed to retrieve chunks after 3 attempts.")
+    # Phase 1 결과에서 인용구 처리
+    citation_list_str = ""
+    if chunks:
+        for x in chunks:
+            try:
+                # 최종 URL 확인 (선택 사항, 속도가 느리다면 제거 가능)
+                final_url = get_final_url_urllib(x.web.uri)
+                title = x.web.title if x.web.title else "Reference"
+                citation_list_str += f"* [{title}]({final_url})\n"
+            except:
+                continue
+    else:
+        citation_list_str = "* (No web citations found during research phase)\n"
 
-    citations = ""
-    for x in chunks:
-        final_url = get_final_url_urllib(x.web.uri)
-        citations += f"* [{x.web.title}]({final_url})\n"
+    research_notes = research_response.text
 
-    response_json = HistoryBotResponse.model_validate_json(repair_json(response.text))
-    response_json.content += f"\n\n## 📚 참고 문헌\n{citations}"
+    print(f"      Collected {len(chunks)} chunks")
 
+    print(f"   ...Phase 2: Writing content with {WRITER_MODEL_NAME}")
+
+    # --- Phase 2: Writing with Pro (No Grounding Tool) ---
+    # [수정] Writer에게는 더 이상 인용구 목록을 입력으로 주지 않으며, 
+    # 본문 작성에만 집중하도록 요청합니다.
+    writer_user_prompt = f"""
+    **Task:** Write the blog post for Day {day_count}.
+    
+    **Input Data (From Researcher):**
+    {research_notes}
+    
+    **Context:**
+    Last Topic: {last_topic} ({last_year})
+    Today's Topic: {next_topic} ({next_year})
+    """
+
+    writer_config = types.GenerateContentConfig(
+        system_instruction=get_writer_prompt(),
+        temperature=0.4, # 창의적인 글쓰기를 위해 온도 상향
+        #response_mime_type='application/json',
+        #response_json_schema=HistoryBotResponse.model_json_schema(),
+        thinking_config=types.ThinkingConfig(thinking_level="high", include_thoughts=False) # Dynamic thinking budget
+    )
+
+    writer_response = client.models.generate_content(
+        model=WRITER_MODEL_NAME,
+        contents=writer_user_prompt,
+        config=writer_config
+    )
+
+    # JSON 파싱 및 복구
+    response_json = HistoryBotResponse.model_validate_json(repair_json(writer_response.text))
+
+    # [중요] 파이썬 코드 레벨에서의 후처리 (Post-processing)
+    # AI의 환각(Hallucination) 방지를 위해 참고 문헌과 면책 조항은 직접 문자열 결합
+    response_json.content += f"\n\n## 📚 참고 문헌\n{citation_list_str}"
     response_json.content += f"\n\n*이 콘텐츠는 AI에 의해 생성되었으며, 오류나 부정확한 정보를 포함할 수 있습니다.*"
+    
     return response_json
+
+# --- [Main Execution] ---
 
 def extract_metadata(content, current_state):    
     new_state = current_state.copy()
@@ -168,16 +262,15 @@ def extract_metadata(content, current_state):
     new_state['last_topic'] = content.metadata.last_topic
     new_state['next_topic'] = content.metadata.next_topic
     new_state['next_year'] = content.metadata.next_year
-    
     return new_state
 
 def main():
     state = load_state()
     
-    # --- [1. 시작 시 종료 조건 확인] ---
     current_actual_year = datetime.now().year
     termination_threshold = current_actual_year - 3
 
+    # 종료 조건 검사
     next_year_candidate = state.get('next_year')
     if not isinstance(next_year_candidate, int) or next_year_candidate >= termination_threshold:
         if state['day_count'] > 0:
@@ -186,12 +279,13 @@ def main():
              print("⚠️ [경고] 초기 상태 오류. bot_state.json을 확인하세요.")
         return
 
-    print(f"🤖 Day {state['day_count']} 콘텐츠 생성 중... ({state['next_year']}년 {state['next_topic']})")
+    print(f"🤖 Day {state['day_count']} 콘텐츠 생성 시작... ({state['next_year']}년 {state['next_topic']})")
     
     try:
+        # 하이브리드 생성 함수 호출
         content_response = generate_daily_content(state)
         
-        # --- [2. 종료 조건 도달 시 '내일의 예고' 교체 (참고문헌 보존)] ---
+        # --- 종료 조건 도달 시 '내일의 예고' 교체 로직 (기존 유지) ---
         if content_response.metadata.next_year >= termination_threshold:
             target_header = "## 📅 내일의 키워드 예고"
             citation_header = "## 📚 참고 문헌"
@@ -207,30 +301,25 @@ def main():
 오늘이 바로 그 마지막 페이지입니다.
 그동안 '생각하는 기계'를 향한 인류의 위대한 여정에 함께 해주셔서 진심으로 감사합니다.
 """
-            # 1) '내일의 예고' 헤더가 있는지 확인
+            # 안전하게 본문 교체
             if target_header in content_response.content:
-                # 2) '내일의 예고' 이전 본문 추출
                 base_content = content_response.content.split(target_header)[0].strip()
-                
-                # 3) '참고 문헌' 이후 섹션 안전하게 추출
                 citation_start_index = content_response.content.find(citation_header)
                 if citation_start_index != -1:
-                    # 참고 문헌 헤더부터 끝까지 모든 내용을 보존합니다 (면책 조항 포함)
                     footer_content = content_response.content[citation_start_index:]
                 else:
-                    # 만약 참고 문헌 섹션이 없다면 빈 문자열 처리
                     footer_content = ""
-
-                # 4) 재조립: [본문] + [종료 알림] + [참고 문헌 및 푸터]
                 content_response.content = f"{base_content}\n\n{replacement_section}\n\n{footer_content}"
 
-        #print("\n--- [생성된 콘텐츠] ---")
-        #print(content_response.content)
-        #print("----------------------\n")
+        # 파일 저장 로직
         content = content_response.content.strip()
-        title = content.splitlines()[0]
+        # 제목 추출 (첫 줄) 및 마크다운(#) 제거
+        title = content.splitlines()[0].replace("#", "").strip()
+        
         body = "\n".join(content.splitlines()[1:]).strip()
         filename = f"{datetime.now().strftime('%Y-%m-%d')}-day{state['day_count']}.md"
+        
+        # Jekyll/Github Pages 호환용 Front matter
         header = f"""
 ---
 title:  "{title}"
@@ -242,22 +331,24 @@ comments: true
 ---
 """
         script_dir = os.path.dirname(os.path.abspath(__file__))
+        # 저장 경로 설정 (상위 폴더의 _posts/cs_history)
         target_dir = os.path.normpath(os.path.join(script_dir, "..", "..", "_posts", "cs_history"))
         os.makedirs(target_dir, exist_ok=True)
+        
         with open(os.path.join(target_dir, filename), 'w', encoding='utf-8') as f:
             f.write(header.strip() + "\n\n" + body)
 
         new_state = extract_metadata(content_response, state)
         save_state(new_state)
-        print("💾 상태가 저장되었습니다.")
+        print("💾 상태 저장 및 파일 생성 완료.")
 
     except Exception as e:
         print(f"❌ 오류 발생: {e}")
         traceback.print_exc()
         raise
+
 if __name__ == "__main__":
     try:
         main()
     except Exception as e:
         sys.exit(1)
-
