@@ -1,8 +1,8 @@
 {
-  "day_count": 62,
+  "day_count": 63,
   "last_run_date": "2025-12-28",
-  "current_year": 2012,
+  "current_year": 2014,
   "last_topic": "Google V8 Engine (2008)",
-  "next_topic": "VGGNet",
-  "next_year": 2014
+  "next_topic": "ResNet (Residual Networks)",
+  "next_year": 2015
 }
