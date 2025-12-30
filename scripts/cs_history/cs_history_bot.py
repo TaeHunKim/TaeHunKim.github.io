@@ -37,24 +37,36 @@ DEFAULT_STATE = {
 # 프롬프트는 모델의 성능 최적화를 위해 영어로 작성합니다.
 
 def get_researcher_prompt():
-    """Phase 1: Flash 모델을 위한 검색 및 조사 지시문"""
+    """Phase 1: 현재 주제 심층 탐구 전용"""
     return """
-You are an 'AI Computer Science History Researcher'. Your goal is to gather accurate, deep, and technical information about a specific historical event or figure in computer science history.
+You are an 'AI Computer Science History Researcher'.
+**Goal:** Research deep technical details about the specific event/figure provided.
 
 **Instructions:**
-1.  **Search Aggressively:** Use the Google Search tool to find detailed information.
-2.  **Deep Dive:** Do not just list dates. Find out *how* the technology worked technically and *why* it was a paradigm shift at the time.
-3.  **Modern Connections:** Identify specific modern technologies (e.g., smartphone architecture, cloud computing concepts, specific AI algorithms) that trace their roots back to this event.
-4.  **Next Milestone:** Identify the *single most important* next milestone (person, hardware, or theory) in computer science history that happened *after* the current event.
-5.  **Output:** Provide a structured summary of your findings in English. This summary will be used by a professional writer to create a blog post.
+1.  **Search Aggressively:** Find detailed specs, logic, and context.
+2.  **Deep Dive:** Explain *how* it works and *why* it was a paradigm shift.
+3.  **Modern Connections:** Trace the lineage to modern tech.
+4.  **Output:** Structured summary for a blog post. Do NOT worry about the next topic.
+"""
 
-**Required Information to Gather:**
-* Official Name & Original Language Name
-* Exact Year & Context
-* Technical Explanation (How it works)
-* The "Revolutionary" Aspect (Why it mattered)
-* Connection to Modern Tech
-* The Next Historical Milestone (Topic & Year)
+def get_planner_prompt():
+    """Phase 1.5: 다음 주제 선정 (Planner) 전용"""
+    return """
+You are the **'Chief Editor of Computer Science History'**.
+Your job is to select the **single most important next milestone** in computer science history based on the provided current context.
+
+**Selection Logic:**
+* Identify the *single most important* next milestone in computer science history that happened *after* the current event.
+    * **PRIORITIZE PARADIGM SHIFTS:** Do not simply choose the next incremental improvement in the same field. Look for technologies that changed how the *entire industry* works.
+    * **EVALUATE IMPACT:** * Example: After 'AlexNet' (AI breakthrough), 'Docker' (2013, Infrastructure revolution) might be historically more significant than 'VGGNet' (AI improvement).
+
+**Output Format:**
+Return ONLY a JSON object:
+{
+    "next_topic": "Topic Name",
+    "next_year": 20XX,
+    "reasoning": "Why this was chosen over other candidates"
+}
 """
 
 def get_writer_prompt():
@@ -171,11 +183,12 @@ def generate_daily_content(state):
     
     grounding_tool = types.Tool(google_search=types.GoogleSearch())
     
-    # Flash 모델 호출 (비용 절감을 위해 Thinking Config 미사용)
+    # Flash 모델 호출
     research_config = types.GenerateContentConfig(
         system_instruction=get_researcher_prompt(),
         tools=[grounding_tool],
-        temperature=0.0  # 사실 수집이므로 온도를 낮춤
+        temperature=0.0,  # 사실 수집이므로 온도를 낮춤
+        thinking_config=types.ThinkingConfig(thinking_budget=24576, include_thoughts=False) # Dynamic thinking budget
     )
 
     research_response = None
@@ -219,6 +232,38 @@ def generate_daily_content(state):
 
     print(f"      Collected {len(chunks)} chunks")
 
+    print(f"   ...Phase 1.5: Selecting NEXT topic...")
+    
+    # 최근 기록 문자열 생성 (state 관리 필요, 여기서는 단순화)
+    recent_history_str = f"Previous: {state.get('last_topic', 'N/A')}, Current: {next_topic}"
+
+    planner_config = types.GenerateContentConfig(
+        system_instruction=get_planner_prompt(),
+        tools=[grounding_tool],
+        temperature=0.0,  # 사실 수집이므로 온도를 낮춤
+        thinking_config=types.ThinkingConfig(thinking_budget=24576, include_thoughts=False) # Dynamic thinking budget
+    )
+
+    planner_prompt = f"""
+**Current Context:**
+* Current Topic: {next_topic} ({next_year})
+* Recent Topics History: {recent_history_str} (Consider this to avoid excessive repetition unless necessary)
+"""
+
+    # Planner도 Flash 모델 사용 (빠르고 저렴함)
+    planner_response = client.models.generate_content(
+        model=RESEARCH_MODEL_NAME, # gemini-2.5-flash
+        contents=planner_prompt,
+        config=planner_config
+    )
+
+    print(f"      Planner Response: {planner_response.text}")
+
+    next_plan = json.loads(repair_json(planner_response.text))
+    print(f"      -> Next Plan: {next_plan['next_topic']} ({next_plan['next_year']})")
+    print(f"      -> Reason: {next_plan['reasoning']}")
+
+
     print(f"   ...Phase 2: Writing content with {WRITER_MODEL_NAME}")
 
     # --- Phase 2: Writing with Pro (No Grounding Tool) ---
@@ -227,9 +272,13 @@ def generate_daily_content(state):
     writer_user_prompt = f"""
     **Task:** Write the blog post for Day {day_count}.
     
-    **Input Data (From Researcher):**
+    **Research Data:**
     {research_notes}
-    
+
+    **Planning Data (For Metadata):**
+    Next Topic: {next_plan['next_topic']}
+    Next Year: {next_plan['next_year']}
+
     **Context:**
     Last Topic: {last_topic} ({last_year})
     Today's Topic: {next_topic} ({next_year})

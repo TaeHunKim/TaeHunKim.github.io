@@ -1,8 +1,8 @@
 {
-  "day_count": 67,
+  "day_count": 64,
   "last_run_date": "2025-12-30",
-  "current_year": 2018,
+  "current_year": 2014,
   "last_topic": "Google V8 Engine",
-  "next_topic": "Generative Pre-trained Transformer 2 (GPT-2)",
-  "next_year": 2019
+  "next_topic": "Transformer Neural Networks",
+  "next_year": 2017
 }
