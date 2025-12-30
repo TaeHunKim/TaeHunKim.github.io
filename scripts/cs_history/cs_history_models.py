@@ -6,7 +6,7 @@ class HistoryBotMetadata(BaseModel):
         ...,
         description="The year being discussed in the content, must match the year in the content template"
     )
-    last_topic: str = Field(
+    current_topic: str = Field(
         ...,
         description="The main topic/person being discussed, must match the keyword in the content template"
     )
@@ -52,7 +52,9 @@ class HistoryBotResponse(BaseModel):
 ---""",
                 "metadata": {
                     "current_year": 1843,
-                    "last_topic": "에이다 러브레이스"
+                    "current_topic": "에이다 러브레이스",
+                    "next_year": 1854,
+                    "next_topic": "부울 대수"
                 }
             }
         }

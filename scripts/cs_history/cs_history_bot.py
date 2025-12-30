@@ -60,6 +60,9 @@ Your job is to select the **single most important next milestone** in computer s
     * **PRIORITIZE PARADIGM SHIFTS:** Do not simply choose the next incremental improvement in the same field. Look for technologies that changed how the *entire industry* works.
     * **EVALUATE IMPACT:** * Example: After 'AlexNet' (AI breakthrough), 'Docker' (2013, Infrastructure revolution) might be historically more significant than 'VGGNet' (AI improvement).
 
+**Constraint**:
+* Unless the next topic is truly massive, try not to skip more than 2 years. Ideally, find a milestone in [Current Year (later than the current topic)], [Current Year + 1] or [Current Year + 2].
+
 **Output Format:**
 Return ONLY a JSON object:
 {
@@ -96,7 +99,7 @@ You MUST output a valid JSON object with the following structure. The 'content' 
     "content": "MARKDOWN_STRING",
     "metadata": {
         "current_year": int,
-        "last_topic": "string",
+        "current_topic": "string",
         "next_topic": "string",
         "next_year": int
     }
@@ -315,7 +318,7 @@ def extract_metadata(content, current_state):
     new_state['day_count'] += 1
     new_state['last_run_date'] = datetime.now().strftime("%Y-%m-%d")
     new_state['current_year'] = content.metadata.current_year
-    new_state['last_topic'] = content.metadata.last_topic
+    new_state['last_topic'] = content.metadata.current_topic
     new_state['next_topic'] = content.metadata.next_topic
     new_state['next_year'] = content.metadata.next_year
     return new_state
