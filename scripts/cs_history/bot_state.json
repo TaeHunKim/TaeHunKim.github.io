@@ -1,8 +1,8 @@
 {
-  "day_count": 67,
+  "day_count": 68,
   "last_run_date": "2026-01-01",
-  "current_year": 2018,
-  "last_topic": "BERT (Bidirectional Encoder Representations from Transformers)",
-  "next_topic": "GPT-2 (Generative Pre-trained Transformer 2)",
-  "next_year": 2019
+  "current_year": 2019,
+  "last_topic": "GPT-2 (Generative Pre-trained Transformer 2)",
+  "next_topic": "GPT-3 (Generative Pre-trained Transformer 3)",
+  "next_year": 2020
 }
