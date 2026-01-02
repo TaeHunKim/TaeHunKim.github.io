@@ -1,8 +1,8 @@
 {
-  "day_count": 68,
-  "last_run_date": "2026-01-01",
-  "current_year": 2019,
-  "last_topic": "GPT-2 (Generative Pre-trained Transformer 2)",
-  "next_topic": "GPT-3 (Generative Pre-trained Transformer 3)",
-  "next_year": 2020
+  "day_count": 69,
+  "last_run_date": "2026-01-02",
+  "current_year": 2020,
+  "last_topic": "GPT-3 (Generative Pre-trained Transformer 3)",
+  "next_topic": "Diffusion Models (e.g., DALL-E 2, Stable Diffusion)",
+  "next_year": 2022
 }
