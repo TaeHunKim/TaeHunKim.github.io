@@ -1,8 +1,8 @@
 {
-  "day_count": 69,
-  "last_run_date": "2026-01-02",
-  "current_year": 2020,
-  "last_topic": "GPT-3 (Generative Pre-trained Transformer 3)",
-  "next_topic": "Diffusion Models (e.g., DALL-E 2, Stable Diffusion)",
+  "day_count": 70,
+  "last_run_date": "2026-01-03",
+  "current_year": 2022,
+  "last_topic": "Diffusion Models (e.g., DALL-E 2, Stable Diffusion)",
+  "next_topic": "ChatGPT and the Democratization of Large Language Models",
   "next_year": 2022
 }
