@@ -1,0 +1,44 @@
+name: Daily AI History Post
+
+on:
+  schedule:
+    # 매일 한국 시간 6시 30분, 18시 30분 (KST, UTC+9) 실행
+    - cron: '27 9 * * *'
+    - cron: '27 21 * * *'
+  workflow_dispatch: # 수동 실행 허용
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write # repo 쓰기 권한 부여
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.x'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          # AI History 폴더의 requirements.txt 사용
+          pip install -r scripts/ai_history/requirements.txt
+
+      - name: Run AI History Bot
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+        run: |
+          cd scripts/ai_history
+          python ai_history_bot.py
+
+      - name: Commit and push changes
+        run: |
+          git config --global user.name 'github-actions[bot]'
+          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+          # 새로 생성된 포스트와 변경된 상태 파일만 git add
+          git add _posts/ai_history/ scripts/ai_history/bot_state.json
+          git diff --quiet && git diff --staged --quiet || (git commit -m "🤖 Add daily AI history post & update state" && git push)
