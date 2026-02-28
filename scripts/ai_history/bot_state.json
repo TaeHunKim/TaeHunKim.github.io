@@ -1,8 +1,8 @@
 {
-  "day_count": 2,
+  "day_count": 3,
   "last_run_date": "2026-02-28",
-  "current_year": 1949,
-  "last_topic": "도널드 헤브의 '행동의 조직' (헤브 학습 규칙)",
-  "next_topic": "다트머스 회의 (인공지능 분야의 탄생)",
-  "next_year": 1956
+  "current_year": 1956,
+  "last_topic": "다트머스 회의 (Dartmouth Workshop)",
+  "next_topic": "퍼셉트론 (Perceptron)의 개발",
+  "next_year": 1957
 }
