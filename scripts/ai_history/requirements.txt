@@ -19,7 +19,6 @@ httpx==0.28.1
 idna==3.11
 json_repair==0.52.5
 proto-plus==1.26.1
-protobuf==5.29.5
 pyasn1==0.6.1
 pyasn1_modules==0.4.2
 pydantic==2.12.4
