@@ -1,8 +1,8 @@
 {
-  "day_count": 1,
+  "day_count": 2,
   "last_run_date": "2026-02-28",
-  "current_year": 1943,
-  "last_topic": "워런 매컬러와 월터 피츠의 인공 신경망 모델 (MCP 뉴런)",
-  "next_topic": "도널드 헤브의 '행동의 조직' (헤브 학습 규칙)",
-  "next_year": 1949
+  "current_year": 1949,
+  "last_topic": "도널드 헤브의 '행동의 조직' (헤브 학습 규칙)",
+  "next_topic": "다트머스 회의 (인공지능 분야의 탄생)",
+  "next_year": 1956
 }
