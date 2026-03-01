@@ -1,8 +1,8 @@
 {
-  "day_count": 3,
-  "last_run_date": "2026-02-28",
-  "current_year": 1956,
-  "last_topic": "다트머스 회의 (Dartmouth Workshop)",
-  "next_topic": "퍼셉트론 (Perceptron)의 개발",
-  "next_year": 1957
+  "day_count": 4,
+  "last_run_date": "2026-03-01",
+  "current_year": 1957,
+  "last_topic": "퍼셉트론(Perceptron)의 개발",
+  "next_topic": "Minsky와 Papert의 'Perceptrons' 출판",
+  "next_year": 1969
 }
