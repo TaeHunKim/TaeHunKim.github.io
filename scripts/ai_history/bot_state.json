@@ -1,8 +1,8 @@
 {
-  "day_count": 4,
-  "last_run_date": "2026-03-01",
-  "current_year": 1957,
-  "last_topic": "퍼셉트론(Perceptron)의 개발",
-  "next_topic": "Minsky와 Papert의 'Perceptrons' 출판",
-  "next_year": 1969
+  "day_count": 5,
+  "last_run_date": "2026-03-02",
+  "current_year": 1969,
+  "last_topic": "Minsky와 Papert의 'Perceptrons' 출판",
+  "next_topic": "전문가 시스템의 부상 (Rise of Expert Systems)",
+  "next_year": 1971
 }
