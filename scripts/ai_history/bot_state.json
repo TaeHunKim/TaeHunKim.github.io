@@ -1,8 +1,8 @@
 {
-  "day_count": 5,
-  "last_run_date": "2026-03-02",
-  "current_year": 1969,
-  "last_topic": "Minsky와 Papert의 'Perceptrons' 출판",
-  "next_topic": "전문가 시스템의 부상 (Rise of Expert Systems)",
-  "next_year": 1971
+  "day_count": 6,
+  "last_run_date": "2026-03-03",
+  "current_year": 1971,
+  "last_topic": "전문가 시스템의 부상 (Rise of Expert Systems)",
+  "next_topic": "PROLOG 프로그래밍 언어 개발 (Development of PROLOG Programming Language)",
+  "next_year": 1972
 }
