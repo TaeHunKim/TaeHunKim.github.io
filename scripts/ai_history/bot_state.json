@@ -1,8 +1,8 @@
 {
-  "day_count": 8,
+  "day_count": 9,
   "last_run_date": "2026-03-05",
-  "current_year": 1973,
-  "last_topic": "Lighthill Report 및 첫 번째 AI 겨울 (Lighthill Report and the First AI Winter)",
-  "next_topic": "전문가 시스템의 부상 (Rise of Expert Systems)",
-  "next_year": 1980
+  "current_year": 1980,
+  "last_topic": "전문가 시스템의 부상 (Rise of Expert Systems)",
+  "next_topic": "일본의 5세대 컴퓨터 시스템 프로젝트 (Japan's Fifth Generation Computer Systems Project)",
+  "next_year": 1982
 }
