@@ -1,8 +1,8 @@
 {
-  "day_count": 7,
-  "last_run_date": "2026-03-04",
-  "current_year": 1972,
-  "last_topic": "PROLOG 프로그래밍 언어 개발 (Development of PROLOG Programming Language)",
-  "next_topic": "Lighthill Report 및 첫 번째 AI 겨울 (Lighthill Report and the First AI Winter)",
-  "next_year": 1973
+  "day_count": 8,
+  "last_run_date": "2026-03-05",
+  "current_year": 1973,
+  "last_topic": "Lighthill Report 및 첫 번째 AI 겨울 (Lighthill Report and the First AI Winter)",
+  "next_topic": "전문가 시스템의 부상 (Rise of Expert Systems)",
+  "next_year": 1980
 }
