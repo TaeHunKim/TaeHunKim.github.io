@@ -1,8 +1,8 @@
 {
-  "day_count": 10,
-  "last_run_date": "2026-03-06",
-  "current_year": 1982,
-  "last_topic": "일본의 5세대 컴퓨터 시스템 프로젝트 (Japan's Fifth Generation Computer Systems Project)",
-  "next_topic": "역전파 알고리즘의 재발견 및 대중화 (Rediscovery and Popularization of the Backpropagation Algorithm)",
-  "next_year": 1986
+  "day_count": 11,
+  "last_run_date": "2026-03-07",
+  "current_year": 1986,
+  "last_topic": "역전파 알고리즘의 재발견 및 대중화 (Rediscovery and Popularization of the Backpropagation Algorithm)",
+  "next_topic": "시간 지연 신경망 (Time Delay Neural Network, TDNN) 개발",
+  "next_year": 1987
 }
