@@ -1,8 +1,8 @@
 {
-  "day_count": 11,
-  "last_run_date": "2026-03-07",
-  "current_year": 1986,
-  "last_topic": "역전파 알고리즘의 재발견 및 대중화 (Rediscovery and Popularization of the Backpropagation Algorithm)",
-  "next_topic": "시간 지연 신경망 (Time Delay Neural Network, TDNN) 개발",
-  "next_year": 1987
+  "day_count": 12,
+  "last_run_date": "2026-03-08",
+  "current_year": 1987,
+  "last_topic": "시간 지연 신경망 (Time Delay Neural Network, TDNN) 개발",
+  "next_topic": "2D 컨볼루션 신경망에 역전파 알고리즘 적용 (LeNet-5)",
+  "next_year": 1988
 }
