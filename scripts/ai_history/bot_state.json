@@ -1,8 +1,8 @@
 {
-  "day_count": 12,
-  "last_run_date": "2026-03-08",
-  "current_year": 1987,
-  "last_topic": "시간 지연 신경망 (Time Delay Neural Network, TDNN) 개발",
-  "next_topic": "2D 컨볼루션 신경망에 역전파 알고리즘 적용 (LeNet-5)",
-  "next_year": 1988
+  "day_count": 13,
+  "last_run_date": "2026-03-09",
+  "current_year": 1988,
+  "last_topic": "2D 컨볼루션 신경망에 역전파 알고리즘 적용 (LeNet-5)",
+  "next_topic": "Long Short-Term Memory (LSTM) 네트워크 개발",
+  "next_year": 1997
 }
