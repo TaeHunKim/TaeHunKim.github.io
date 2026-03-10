@@ -1,8 +1,8 @@
 {
-  "day_count": 13,
-  "last_run_date": "2026-03-09",
-  "current_year": 1988,
-  "last_topic": "2D 컨볼루션 신경망에 역전파 알고리즘 적용 (LeNet-5)",
-  "next_topic": "Long Short-Term Memory (LSTM) 네트워크 개발",
-  "next_year": 1997
+  "day_count": 14,
+  "last_run_date": "2026-03-10",
+  "current_year": 1997,
+  "last_topic": "Long Short-Term Memory (LSTM) 네트워크 개발",
+  "next_topic": "Support Vector Machines (SVM)의 광범위한 채택 및 영향력 확대",
+  "next_year": 1998
 }
