@@ -1,8 +1,8 @@
 {
-  "day_count": 14,
-  "last_run_date": "2026-03-10",
-  "current_year": 1997,
-  "last_topic": "Long Short-Term Memory (LSTM) 네트워크 개발",
-  "next_topic": "Support Vector Machines (SVM)의 광범위한 채택 및 영향력 확대",
-  "next_year": 1998
+  "day_count": 15,
+  "last_run_date": "2026-03-11",
+  "current_year": 1998,
+  "last_topic": "Support Vector Machines (SVM)",
+  "next_topic": "심층 신경망의 효과적인 훈련 방법론 개발 (2006)",
+  "next_year": 2006
 }
