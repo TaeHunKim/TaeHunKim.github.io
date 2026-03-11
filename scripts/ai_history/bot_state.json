@@ -1,8 +1,8 @@
 {
-  "day_count": 15,
+  "day_count": 16,
   "last_run_date": "2026-03-11",
-  "current_year": 1998,
-  "last_topic": "Support Vector Machines (SVM)",
-  "next_topic": "심층 신경망의 효과적인 훈련 방법론 개발 (2006)",
-  "next_year": 2006
+  "current_year": 2006,
+  "last_topic": "심층 신경망의 효과적인 훈련 방법론 개발 (2006)",
+  "next_topic": "AlexNet의 ImageNet 챌린지 우승 (2012)",
+  "next_year": 2012
 }
