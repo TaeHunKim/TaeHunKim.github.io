@@ -1,8 +1,8 @@
 {
-  "day_count": 18,
-  "last_run_date": "2026-03-13",
-  "current_year": 2015,
-  "last_topic": "ResNet의 등장 및 ImageNet 챌린지 우승",
-  "next_topic": "AlphaGo의 이세돌 꺾고 바둑 챔피언 등극",
-  "next_year": 2016
+  "day_count": 19,
+  "last_run_date": "2026-03-14",
+  "current_year": 2016,
+  "last_topic": "AlphaGo's Victory over Lee Sedol",
+  "next_topic": "Transformer Architecture (Attention Is All You Need)",
+  "next_year": 2017
 }
