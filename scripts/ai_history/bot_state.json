@@ -1,8 +1,8 @@
 {
-  "day_count": 20,
+  "day_count": 21,
   "last_run_date": "2026-03-15",
-  "current_year": 2017,
-  "last_topic": "Transformer Architecture (Attention Is All You Need)",
-  "next_topic": "BERT (Bidirectional Encoder Representations from Transformers)",
-  "next_year": 2018
+  "current_year": 2018,
+  "last_topic": "BERT (Bidirectional Encoder Representations from Transformers)",
+  "next_topic": "GPT-3 (Generative Pre-trained Transformer 3)",
+  "next_year": 2020
 }
