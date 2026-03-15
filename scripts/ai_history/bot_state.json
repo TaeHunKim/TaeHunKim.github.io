@@ -1,8 +1,8 @@
 {
-  "day_count": 19,
-  "last_run_date": "2026-03-14",
-  "current_year": 2016,
-  "last_topic": "AlphaGo's Victory over Lee Sedol",
-  "next_topic": "Transformer Architecture (Attention Is All You Need)",
-  "next_year": 2017
+  "day_count": 20,
+  "last_run_date": "2026-03-15",
+  "current_year": 2017,
+  "last_topic": "Transformer Architecture (Attention Is All You Need)",
+  "next_topic": "BERT (Bidirectional Encoder Representations from Transformers)",
+  "next_year": 2018
 }
